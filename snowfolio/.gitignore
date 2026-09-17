@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+*.log
+.DS_Store
+.env*.local
+
+# Local JSON data store (keep the folder, ignore the live data file)
+/data/transactions.json

@@ -1,0 +1,293 @@
+:root {
+  --bg: #0b1120;
+  --panel: #131c31;
+  --panel-2: #1a2540;
+  --border: #26324f;
+  --text: #e6edf7;
+  --muted: #8b98b3;
+  --accent: #38bdf8;
+  --green: #34d399;
+  --red: #f87171;
+  --yellow: #fbbf24;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 18px;
+}
+.logo {
+  font-size: 20px;
+}
+
+.topbar nav {
+  display: flex;
+  gap: 18px;
+}
+.topbar nav a {
+  color: var(--muted);
+  font-weight: 500;
+  padding: 4px 2px;
+}
+.topbar nav a:hover {
+  color: var(--text);
+}
+
+.container {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 24px 18px 60px;
+}
+
+.foot {
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  padding: 24px;
+}
+
+h1 {
+  font-size: 22px;
+  margin: 0 0 4px;
+}
+.subtle {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0 0 20px;
+}
+
+/* Stat cards */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.card .label {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.card .value {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+.card .sub {
+  font-size: 12px;
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+.pos {
+  color: var(--green);
+}
+.neg {
+  color: var(--red);
+}
+
+/* Table */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+.panel h2 {
+  font-size: 15px;
+  margin: 0 0 12px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  white-space: nowrap;
+}
+th,
+td {
+  text-align: right;
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border);
+}
+th:first-child,
+td:first-child {
+  text-align: left;
+}
+th {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+tbody tr:hover {
+  background: var(--panel-2);
+}
+.tick {
+  font-weight: 700;
+}
+.tick small {
+  display: block;
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 11px;
+}
+
+/* Forms & buttons */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+label.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+input,
+select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 9px 10px;
+  font-size: 14px;
+  width: 100%;
+}
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+button {
+  background: var(--accent);
+  color: #06121f;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+button:hover {
+  filter: brightness(1.08);
+}
+button.ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+button.ghost:hover {
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.badge.BUY {
+  background: rgba(52, 211, 153, 0.15);
+  color: var(--green);
+}
+.badge.SELL {
+  background: rgba(248, 113, 113, 0.15);
+  color: var(--red);
+}
+.badge.DIVIDEND {
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--accent);
+}
+
+.error {
+  color: var(--red);
+  font-size: 13px;
+  margin-top: 8px;
+}
+.empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 30px;
+}
+
+/* Snowball projection controls */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.controls label.field {
+  min-width: 130px;
+}
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0;
+  font-size: 12px;
+}
+.bar-row .yr {
+  width: 54px;
+  color: var(--muted);
+}
+.bar {
+  height: 16px;
+  background: linear-gradient(90deg, var(--accent), var(--green));
+  border-radius: 4px;
+  min-width: 2px;
+}
+.bar-row .amt {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
