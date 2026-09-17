@@ -71,6 +71,8 @@ export function enrich(holdings, quotes) {
       ...h,
       name: q.name || h.ticker,
       currency: q.currency || "USD",
+      sector: q.sector || "Unknown",
+      country: q.country || "Unknown",
       price,
       priceIsLive,
       changePct: priceIsLive ? q.changePct || 0 : 0,
@@ -110,6 +112,31 @@ export function enrich(holdings, quotes) {
 
 function sum(arr, key) {
   return arr.reduce((acc, r) => acc + (r[key] || 0), 0);
+}
+
+// Diversification breakdowns for held positions: by ticker, sector and country.
+// Each returns [{ label, value, pct }] sorted by value desc.
+export function buildAllocation(rows) {
+  const held = rows.filter((r) => r.shares > 0);
+  const total = sum(held, "marketValue");
+
+  const group = (keyFn) => {
+    const map = new Map();
+    for (const r of held) {
+      const label = keyFn(r) || "Unknown";
+      map.set(label, (map.get(label) || 0) + r.marketValue);
+    }
+    return [...map.entries()]
+      .map(([label, value]) => ({ label, value, pct: total > 0 ? (value / total) * 100 : 0 }))
+      .sort((a, b) => b.value - a.value);
+  };
+
+  return {
+    total,
+    byTicker: group((r) => r.ticker),
+    bySector: group((r) => r.sector),
+    byCountry: group((r) => r.country),
+  };
 }
 
 // The "snowball": project annual dividend income forward, reinvesting all

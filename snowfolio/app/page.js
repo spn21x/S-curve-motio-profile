@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { money, num, pct, cls } from "../lib/format";
 import { projectSnowball } from "../lib/portfolio";
+import Allocation from "./components/Allocation";
 
 export default function Dashboard() {
   const [data, setData] = useState(null);
@@ -143,6 +144,8 @@ export default function Dashboard() {
               </tbody>
             </table>
           </section>
+
+          <Allocation allocation={data.allocation} />
 
           <section className="panel">
             <h2>❄️ Snowball Projection</h2>

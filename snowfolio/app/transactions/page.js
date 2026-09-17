@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { money, num } from "../../lib/format";
+import { CSV_TEMPLATE } from "../../lib/csv";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -22,6 +23,9 @@ export default function TransactionsPage() {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [quote, setQuote] = useState(null);
+  const [csv, setCsv] = useState("");
+  const [importMsg, setImportMsg] = useState("");
+  const [importing, setImporting] = useState(false);
 
   async function load() {
     const res = await fetch("/api/transactions", { cache: "no-store" });
@@ -76,6 +80,44 @@ export default function TransactionsPage() {
     if (!confirm("Delete this transaction?")) return;
     await fetch(`/api/transactions/${id}`, { method: "DELETE" });
     await load();
+  }
+
+  async function onFile(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setCsv(await file.text());
+  }
+
+  async function importCsv() {
+    setImportMsg("");
+    setImporting(true);
+    try {
+      const res = await fetch("/api/transactions/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ csv }),
+      });
+      const data = await res.json();
+      if (!res.ok && !data.added) throw new Error(data.error || "import failed");
+      const errs = data.errors?.length ? ` · ${data.errors.length} skipped` : "";
+      setImportMsg(`Imported ${data.added} transaction(s)${errs}.`);
+      setCsv("");
+      await load();
+    } catch (err) {
+      setImportMsg(`Error: ${String(err.message || err)}`);
+    } finally {
+      setImporting(false);
+    }
+  }
+
+  function downloadTemplate() {
+    const blob = new Blob([CSV_TEMPLATE], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "snowfolio-template.csv";
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   const isDividend = form.type === "DIVIDEND";
@@ -168,6 +210,37 @@ export default function TransactionsPage() {
           </p>
         ) : null}
         {error ? <p className="error">{error}</p> : null}
+      </section>
+
+      <section className="panel import-box">
+        <h2>Import from CSV</h2>
+        <p className="subtle">
+          Paste rows or upload a CSV exported from your broker. Columns:{" "}
+          <code>type, ticker, date, shares, price, amount, fee, note</code>.
+        </p>
+        <textarea
+          value={csv}
+          onChange={(e) => setCsv(e.target.value)}
+          placeholder={CSV_TEMPLATE}
+          spellCheck={false}
+        />
+        <div className="row-actions">
+          <button onClick={importCsv} disabled={importing || !csv.trim()}>
+            {importing ? "Importing…" : "Import"}
+          </button>
+          <input type="file" accept=".csv,text/csv" onChange={onFile} />
+          <button className="ghost" onClick={downloadTemplate}>
+            Download template
+          </button>
+          {importMsg ? (
+            <span className={importMsg.startsWith("Error") ? "error" : "subtle"}>{importMsg}</span>
+          ) : null}
+        </div>
+        <details className="help">
+          <summary>Format help</summary>
+          <pre>{CSV_TEMPLATE}</pre>
+          type = BUY / SELL / DIVIDEND · date = YYYY-MM-DD · amount only for DIVIDEND rows.
+        </details>
       </section>
 
       <section className="panel">

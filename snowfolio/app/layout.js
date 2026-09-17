@@ -17,6 +17,7 @@ export default function RootLayout({ children }) {
           </div>
           <nav>
             <Link href="/">Dashboard</Link>
+            <Link href="/calendar">Calendar</Link>
             <Link href="/transactions">Transactions</Link>
           </nav>
         </header>
